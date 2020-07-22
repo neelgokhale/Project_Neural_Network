@@ -18,4 +18,4 @@ if __name__ == '__main__':
     net = NeuralNetwork(input_data=INPUT_DATA, output_data=OUTPUT_DATA, scale_data=True)
     net.train(train_epochs=150000, document=False)
     net.save_weights()
-    net.predict(pred_val=None)
+    net.predict(pred_val=None)  # User input if needed for pred_val (should be in input arr format)
