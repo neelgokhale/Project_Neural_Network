@@ -16,6 +16,6 @@ if __name__ == '__main__':
     OUTPUT_DATA = ([92], [86], [89])
 
     net = NeuralNetwork(input_data=INPUT_DATA, output_data=OUTPUT_DATA, scale_data=True)
-    net.train(train_epochs=150000, document=False)
+    net.train(train_epochs=100, document=False, show_plt=True)
     net.save_weights()
     net.predict(pred_val=None)  # User input if needed for pred_val (should be in input arr format)

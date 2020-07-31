@@ -7,6 +7,7 @@ Built using PyCharm
 
 import numpy as np
 from data import Data
+import matplotlib.pyplot as plt
 
 
 class NeuralNetwork(object):
@@ -15,20 +16,22 @@ class NeuralNetwork(object):
         """
         Neural network class, containing all the functions used to model, train and validate based on a dataset
 
+        :param input_data: list of input dataset
+        :param output_data: list of output dataset
         :param scale_data: boolean value used to normalize data. Leave at True for better performance
         """
-        self.input_size = 2
-        self.output_size = 1
-        self.hidden_size = 3
-
-        self.w_1 = np.random.randn(self.input_size, self.hidden_size)  # input -> weight layers
-        self.w_2 = np.random.randn(self.hidden_size, self.output_size)  # weight layers -> output
-
         self.data = Data(input_data=input_data, output_data=output_data)
         self.scale_data = scale_data
         if self.scale_data:
             self.data.scale_data()
         self.data.split_data(where=-1)
+
+        self.input_size = len(input_data[0])
+        self.output_size = len(output_data[0])
+        self.hidden_size = len(input_data[0]) + 1
+
+        self.w_1 = np.random.randn(self.input_size, self.hidden_size)  # input -> weight layers
+        self.w_2 = np.random.randn(self.hidden_size, self.output_size)  # weight layers -> output
 
     def sigmoid(self, x: np.ndarray):
         """
@@ -47,6 +50,10 @@ class NeuralNetwork(object):
         :return: slopes of sigmoid function for array x
         """
         return x * (1 - x)
+
+    # TODO: fully implement softmax function with variable output size
+    def softmax(self, x: np.ndarray):
+        return np.exp(x) / np.sum(np.exp(x))
 
     def forward(self, prediction_val: any = None):
         """
@@ -77,23 +84,41 @@ class NeuralNetwork(object):
         self.w_1 += self.data.X.T.dot(self.w_2_delta)  # adjusting w_1 (input -> hidden)
         self.w_2 += self.dot1_output.T.dot(self.output_delta)  # adjusting w_2 (hidden -> output)
 
-    def train(self, train_epochs: int, document: bool = True):
+    def train(self, train_epochs: int, document: bool = True, show_plt: bool = True):
         """
         Training function used to build the relationship matrix in the neural network object
 
         :param train_epochs: number of times the input dataset is trained
         :param document: controls the documentation of each step in the terminal. Set to True by default
+        :param show_plt: draws plot of ongoing loss calculations by epoch count
         """
         for i in range(train_epochs):
+            count = []
+            loss_history = []
+            loss = np.mean(np.square(self.data.Y - self.forward(self.data.X)))
+            count.append(i)
+            loss_history.append(np.round(loss, 6))
+
+            print(f"count: {i}, loss: {loss}")
+
             if document:
                 print("> epoch_" + str(i) + "\n")
                 print("Input (scaled): \n" + str(self.data.X))
                 print("Actual Output: \n" + str(self.data.Y))
                 print("Predicted Output: \n" + str(self.forward()))
-                print("Loss: \n" + str(np.mean(np.square(self.data.Y - self.forward(self.data.X)))))  # mean squared error
+                print("Loss: \n" + str(loss))  # mean squared error
                 print("\n")
+
+            # if show_plt:
+            plt.title("Loss over Epochs")
+            plt.xlabel("Epochs")
+            plt.ylabel("Loss")
+            plt.plot(count, loss_history, 'r')
+            plt.pause(0.001)
+
             self.output = self.forward()
             self.backward()
+
 
     def save_weights(self):
         """
