@@ -76,7 +76,8 @@ class NeuralNetwork(object):
         Main back-propagation function
         """
         self.output_error = self.data.Y - self.output  # error in input
-        self.output_delta = self.output_error * self.d_sigmoid(self.output)  # scaling output error by sigmoid derivative
+        self.output_delta = self.output_error * self.d_sigmoid(
+            self.output)  # scaling output error by sigmoid derivative
 
         self.w_2_error = self.output_delta.dot(self.w_2.T)  # w_2 error: error by hidden layer
         self.w_2_delta = self.w_2_error * self.d_sigmoid(self.dot1_output)  # scaling w_2 error by sigmoid derivative
@@ -109,16 +110,15 @@ class NeuralNetwork(object):
                 print("Loss: \n" + str(loss))  # mean squared error
                 print("\n")
 
-            # if show_plt:
-            plt.title("Loss over Epochs")
-            plt.xlabel("Epochs")
-            plt.ylabel("Loss")
-            plt.plot(count, loss_history, 'r')
-            plt.pause(0.001)
+            if show_plt:
+                plt.title("Loss over Epochs")
+                plt.xlabel("Epochs")
+                plt.ylabel("Loss")
+                plt.plot(count, loss_history, 'r')
+                plt.pause(0.001)
 
-            self.output = self.forward()
-            self.backward()
-
+                self.output = self.forward()
+                self.backward()
 
     def save_weights(self):
         """

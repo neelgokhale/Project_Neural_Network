@@ -35,16 +35,13 @@ class Point:
 
 
 def graph_data(point_list: list):
-    color_list = ['green', 'orange', 'purple', 'black', 'pink', 'black', 'lightblue', 'brown']
+    color_list = ['green', 'orange', 'purple', 'pink', 'yellow', 'lightblue', 'brown']
     for point in point_list:
         if point.is_centroid:
             color = 'r'
             marker = 'D'
         elif point.cluster_id is not None:
             color = color_list[point.cluster_id]
-            marker = '.'
-        else:
-            color = 'black'
             marker = '.'
         plt.scatter(point.x, point.y, c=color, marker=marker)
     plt.show()
@@ -69,10 +66,35 @@ def generate_centroids(num_centroids: int, num_points: int, point_list: list):
     return centroid_list
 
 
-def generate_clusters(point_list: list, centroid_list: list):
+def create_clusters(num_centroids: int):
+    cluster_dict = {}
+    for i in range(num_centroids):
+        cluster_dict.update({i:[]})
+    return cluster_dict
+
+
+def populate_clusters(point_list: list, centroid_list: list, cluster_dict: dict):
     for point in point_list:
         if not point.is_centroid:
             point.cluster_id = point.index_closest_centroid(centroid_list)
+            cluster_dict[point.cluster_id].append(point)
+
+
+def center_of_mass(cluster_dict: dict):
+    cm_list = []
+    for i in cluster_dict:
+        cluster_sum_x = 0
+        cluster_sum_y = 0
+        for point in cluster_dict[i]:
+            cluster_sum_x += point.x
+            cluster_sum_y += point.y
+        cm_list.append((cluster_sum_x / len(cluster_dict[i]), cluster_sum_y / len(cluster_dict[i])))
+    return cm_list
+
+
+def relocate_centroids(centroid_list: list, cm_list: list):
+    for i, centroid in enumerate(centroid_list):
+        centroid.move_self((cm_list[i][0], cm_list[i][1]))
 
 
 
