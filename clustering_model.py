@@ -195,6 +195,15 @@ def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict:
 
 
 def predict_cluster(test_point, centroid_list: list, point_list: list, graph: bool=True):
+    """
+    Used to predict the local cluster of a new test data point
+
+    :param test_point: Point object with test_point = True
+    :param centroid_list: list of centroids
+    :param point_list: list of point objects
+    :param graph: controls if point_list with test point should be graphed
+    :return: a list of probabilities corresponding to cluster IDs
+    """
     dist_list = []
     prob_list = []
     for centroid in centroid_list:
