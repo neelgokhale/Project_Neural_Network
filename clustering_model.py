@@ -28,7 +28,12 @@ def graph_data(point_list: list, x_lbl: str="x", y_lbl: str="y", plt_title: str=
         elif point.cluster_id is not None:
             color = color_list[point.cluster_id]
             marker = '.'
+        elif point.test_point:
+            color = 'black'
+            marker = '.'
         plt.scatter(point.x, point.y, c=color, marker=marker)
+        if point.is_centroid:
+            plt.annotate(str(point.cluster_id), (point.x, point.y))
     plt.xlabel(x_lbl)
     plt.ylabel(y_lbl)
     if plt_title is None:
@@ -38,7 +43,7 @@ def graph_data(point_list: list, x_lbl: str="x", y_lbl: str="y", plt_title: str=
     plt.show()
 
 
-def generate_rand_data(num_points: int, range_x: float = 1, range_y: float = 1):
+def generate_rand_data(num_points: int, range_x: float=1, range_y: float=1):
     """
     Generate random `Point` object data with x and y range
 
@@ -72,7 +77,7 @@ def generate_data(file_path: str, headers: bool=True):
     return point_list
 
 
-def generate_centroids(num_centroids: int, point_list: list):
+def assign_centroids(num_centroids: int, point_list: list):
     """
     Randomly assign centroid designation to a given number of points within dataset
 
@@ -87,6 +92,29 @@ def generate_centroids(num_centroids: int, point_list: list):
         point_list[rand_num].is_centroid = True
         centroid_list.append(point_list[rand_num])
         excluding.append(rand_num)
+    return centroid_list
+
+
+def generate_centroids(num_centroids: int, point_list: list):
+    """
+    Randomly generate centroids within the bounds of dataset
+
+    :param num_centroids: number of centroids required
+    :param point_list: list of Point objects
+    :return: list of randomly generated centroids
+    """
+    centroid_list = []
+    x_vals = [i.x for i in point_list]
+    y_vals = [i.y for i in point_list]
+    x_max = max(x_vals)
+    y_max = max(y_vals)
+    for i in range(num_centroids):
+        centroid = Point(random.random() * x_max,
+                         random.random() * y_max)
+        centroid.is_centroid = True
+        centroid.cluster_id = i
+        centroid_list.append(centroid)
+        point_list.append(centroid)
     return centroid_list
 
 
@@ -164,3 +192,17 @@ def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict:
     if graph:
         graph_data(point_list)
     return point_list
+
+
+def predict_cluster(test_point, centroid_list: list, point_list: list, graph: bool=True):
+    dist_list = []
+    prob_list = []
+    for centroid in centroid_list:
+        dist_list.append(1 / test_point.distance_to(centroid))
+    total_inv_value = sum(dist_list)
+    prob_list = [i / total_inv_value for i in dist_list]
+    if graph:
+        print(prob_list)
+        point_list.append(test_point)
+        graph_data(point_list)
+    return prob_list

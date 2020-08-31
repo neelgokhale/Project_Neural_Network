@@ -10,11 +10,12 @@ import numpy as np
 
 class Point:
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, test_point=False):
         self.x = x
         self.y = y
         self.is_centroid = False
         self.cluster_id = None
+        self.test_point = test_point
 
     def distance_to(self, point2):
         return np.sqrt((self.x - point2.x) ** 2 + (self.y - point2.y) ** 2)
