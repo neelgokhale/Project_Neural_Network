@@ -95,15 +95,16 @@ def assign_centroids(num_centroids: int, point_list: list):
     return centroid_list
 
 
-def generate_centroids(num_centroids: int, point_list: list, precision: int=1000):
+def generate_centroids(num_centroids: int, point_list: list, precision: int=3):
     """
     Randomly generate centroids within the bounds of dataset
 
     :param num_centroids: number of centroids required
     :param point_list: list of Point objects
-    :param precision: controls the precision of randomly generated centroid dimension values
+    :param precision: number of decimal places of precision on location of centroids
     :return: list of randomly generated centroids
     """
+    precision = 10 ** precision
     centroid_list = []
     x_vals = [i.x for i in point_list]
     y_vals = [i.y for i in point_list]
