@@ -20,11 +20,11 @@ def graph_data(point_list: list, x_lbl: str="x", y_lbl: str="y", plt_title: str=
     :param y_lbl: y-axis label
     :param plt_title: plot title
     """
-    color_list = ['green', 'orange', 'purple', 'pink', 'yellow', 'lightblue', 'brown']
+    color_list = ['green', 'orange', 'purple', 'pink', 'yellow', 'lightblue', 'brown', 'cyan', 'lightgreen']
     for point in point_list:
         if point.is_centroid:
             color = 'r'
-            marker = 'D'
+            marker = 'd'
         elif point.cluster_id is not None:
             color = color_list[point.cluster_id]
             marker = '.'
@@ -95,22 +95,23 @@ def assign_centroids(num_centroids: int, point_list: list):
     return centroid_list
 
 
-def generate_centroids(num_centroids: int, point_list: list):
+def generate_centroids(num_centroids: int, point_list: list, precision: int=1000):
     """
     Randomly generate centroids within the bounds of dataset
 
     :param num_centroids: number of centroids required
     :param point_list: list of Point objects
+    :param precision: controls the precision of randomly generated centroid dimension values
     :return: list of randomly generated centroids
     """
     centroid_list = []
     x_vals = [i.x for i in point_list]
     y_vals = [i.y for i in point_list]
-    x_max = max(x_vals)
-    y_max = max(y_vals)
+    x_max, x_min = max(x_vals), min(x_vals)
+    y_max, y_min = max(y_vals), min(y_vals)
     for i in range(num_centroids):
-        centroid = Point(random.random() * x_max,
-                         random.random() * y_max)
+        centroid = Point(random.randrange(int(precision * x_min), int(precision * x_max)) / precision,
+                         random.randrange(int(precision * y_min), int(precision * y_max)) / precision)
         centroid.is_centroid = True
         centroid.cluster_id = i
         centroid_list.append(centroid)
@@ -143,6 +144,7 @@ def populate_clusters(point_list: list, centroid_list: list, cluster_dict: dict)
         if not point.is_centroid:
             point.cluster_id = point.index_closest_centroid(centroid_list)
             cluster_dict[point.cluster_id].append(point)
+    return cluster_dict
 
 
 def center_of_mass(cluster_dict: dict):
@@ -159,7 +161,10 @@ def center_of_mass(cluster_dict: dict):
         for point in cluster_dict[i]:
             cluster_sum_x += point.x
             cluster_sum_y += point.y
-        cm_list.append((cluster_sum_x / len(cluster_dict[i]), cluster_sum_y / len(cluster_dict[i])))
+        if len(cluster_dict[i]) == 0:
+            cm_list.append((None, None))
+        else:
+            cm_list.append((cluster_sum_x / len(cluster_dict[i]), cluster_sum_y / len(cluster_dict[i])))
     return cm_list
 
 
@@ -186,9 +191,11 @@ def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict:
     :return: point_list with refined clusters and centroid values
     """
     for epoch in range(epochs):
-        populate_clusters(point_list, centroid_list, cluster_dict)
-        cm_list = center_of_mass(cluster_dict)
+        print(f"Epoch {epoch}")
+        new_cluster_dict = populate_clusters(point_list, centroid_list, cluster_dict)
+        cm_list = center_of_mass(new_cluster_dict)
         relocate_centroids(centroid_list, cm_list)
+        cluster_dict = create_clusters(len(centroid_list))
     if graph:
         graph_data(point_list)
     return point_list

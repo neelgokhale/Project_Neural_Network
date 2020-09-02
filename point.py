@@ -53,5 +53,9 @@ class Point:
         :param new_loc: tuple with new location (x, y)
         """
         if self.is_centroid:
-            self.x = new_loc[0]
-            self.y = new_loc[1]
+            if new_loc == (None, None):
+                self.x = self.x
+                self.y = self.y
+            else:
+                self.x = new_loc[0]
+                self.y = new_loc[1]
