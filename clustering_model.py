@@ -6,9 +6,11 @@ Built using PyCharm
 """
 
 import matplotlib.pyplot as plt
+import numpy as np
 import random
 import csv
-from point import Point
+from data_class.point import Point
+from tqdm import tqdm
 
 
 def graph_data(point_list: list, x_lbl: str="x", y_lbl: str="y", plt_title: str=None):
@@ -34,6 +36,8 @@ def graph_data(point_list: list, x_lbl: str="x", y_lbl: str="y", plt_title: str=
         plt.scatter(point.x, point.y, c=color, marker=marker)
         if point.is_centroid:
             plt.annotate(str(point.cluster_id), (point.x, point.y))
+        if point.test_point:
+            plt.annotate("test_point", (point.x, point.y))
     plt.xlabel(x_lbl)
     plt.ylabel(y_lbl)
     if plt_title is None:
@@ -117,6 +121,25 @@ def generate_centroids(num_centroids: int, point_list: list, precision: int=3):
         centroid.cluster_id = i
         centroid_list.append(centroid)
         point_list.append(centroid)
+    new_centroid_list = check_centroids(centroid_list=centroid_list, point_list=point_list, precision=3)
+    return new_centroid_list
+
+
+def check_centroids(centroid_list: list, point_list: list, precision: int=3):
+    if len(centroid_list) > 1:
+        precision = 10 ** precision
+        x_vals = [i.x for i in point_list]
+        y_vals = [i.y for i in point_list]
+        x_max, x_min = max(x_vals), min(x_vals)
+        y_max, y_min = max(y_vals), min(y_vals)
+        max_diag = np.sqrt((x_max - x_min) ** 2 + (y_max - y_min) ** 2)
+        for check_c in centroid_list:
+            check_list = centroid_list.copy()
+            check_list.remove(check_c)
+            for centroid in check_list:
+                if check_c.distance_to(centroid) < 1/4 * max_diag:
+                    check_c.move_self((random.randrange(int(precision * x_min), int(precision * x_max)) / precision,
+                                       random.randrange(int(precision * y_min), int(precision * y_max)) / precision))
     return centroid_list
 
 
@@ -180,7 +203,7 @@ def relocate_centroids(centroid_list: list, cm_list: list):
         centroid.move_self((cm_list[i][0], cm_list[i][1]))
 
 
-def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict: dict, graph: bool=True):
+def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict: dict, graph: bool=True, document: bool=False):
     """
     Regenerate clusters after centroid location refinement for given number of epochs
 
@@ -191,8 +214,9 @@ def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict:
     :param graph: controls if point_list should be graphed after final epoch
     :return: point_list with refined clusters and centroid values
     """
-    for epoch in range(epochs):
-        print(f"Epoch {epoch}")
+    for epoch in tqdm(range(epochs), ncols=100, desc="Progress"):
+        if document:
+            print(f"Epoch {epoch}")
         new_cluster_dict = populate_clusters(point_list, centroid_list, cluster_dict)
         cm_list = center_of_mass(new_cluster_dict)
         relocate_centroids(centroid_list, cm_list)
