@@ -126,6 +126,14 @@ def generate_centroids(num_centroids: int, point_list: list, precision: int=3):
 
 
 def check_centroids(centroid_list: list, point_list: list, precision: int=3):
+    """
+    Internal function used to relocate proximal centroids
+
+    :param centroid_list: list of centroids
+    :param point_list: list of point objects
+    :param precision: number of decimal places of precision on location of centroids
+    :return: new centroid list with re-located centroids
+    """
     if len(centroid_list) > 1:
         precision = 10 ** precision
         x_vals = [i.x for i in point_list]

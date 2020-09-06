@@ -7,8 +7,8 @@ Built using PyCharm
 
 # Main program to test / view outputs from the neural network
 
-from neuralnetwork import NeuralNetwork
-import clustering_model as cl
+from models.neuralnetwork_model import NeuralNetwork
+from models import clustering_model as cl
 from data_class import point
 
 if __name__ == '__main__':

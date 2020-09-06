@@ -124,8 +124,8 @@ class NeuralNetwork(object):
         """
         Used to save the current calculated weights
         """
-        np.savetxt("/Users/Owner/PycharmProjects/Project_NN_From_Scratch/training_data/w1.txt", self.w_1, fmt='%s')
-        np.savetxt("/Users/Owner/PycharmProjects/Project_NN_From_Scratch/training_data/w2.txt", self.w_2, fmt='%s')
+        np.savetxt("/Users/Owner/PycharmProjects/Project_NN_From_Scratch/train_snapshots/w1.txt", self.w_1, fmt='%s')
+        np.savetxt("/Users/Owner/PycharmProjects/Project_NN_From_Scratch/train_snapshots/w2.txt", self.w_2, fmt='%s')
 
     def predict(self, pred_val: any = None):
         """
