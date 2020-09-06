@@ -6,7 +6,7 @@ Built using PyCharm
 """
 
 import numpy as np
-from data import Data
+from data_class.data import Data
 import matplotlib.pyplot as plt
 
 
