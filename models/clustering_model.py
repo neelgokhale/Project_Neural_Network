@@ -214,7 +214,7 @@ def relocate_centroids(centroid_list: list, cm_list: list):
 
 @logging.my_logger
 @logging.my_timer
-def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict: dict, graph: bool=True, document: bool=False):
+def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict: dict, graph: bool=False, document: bool=False):
     """
     Regenerate clusters after centroid location refinement for given number of epochs
 
