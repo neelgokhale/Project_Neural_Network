@@ -29,6 +29,6 @@ def my_timer(original_function):
         t1 = time.time()
         result = original_function(*args, **kwargs)
         t2 = time.time() - t1
-        print(f'{original_function.__name__} ran in {t2} seconds')
+        print(f'Function {original_function.__name__} ran in {t2} seconds')
         return result
     return wrapper
