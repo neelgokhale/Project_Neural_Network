@@ -6,8 +6,9 @@ Built using PyCharm
 """
 
 import numpy as np
-from data_class.data import Data
+from objects.data import Data
 import matplotlib.pyplot as plt
+from utils import logging
 
 
 class NeuralNetwork(object):
@@ -18,7 +19,7 @@ class NeuralNetwork(object):
 
         :param input_data: list of input dataset
         :param output_data: list of output dataset
-        :param scale_data: boolean value used to normalize data. Leave at True for better performance
+        :param scale_data: boolean value used to normalize assets. Leave at True for better performance
         """
         self.data = Data(input_data=input_data, output_data=output_data)
         self.scale_data = scale_data
@@ -85,6 +86,8 @@ class NeuralNetwork(object):
         self.w_1 += self.data.X.T.dot(self.w_2_delta)  # adjusting w_1 (input -> hidden)
         self.w_2 += self.dot1_output.T.dot(self.output_delta)  # adjusting w_2 (hidden -> output)
 
+    @logging.my_logger
+    @logging.my_timer
     def train(self, train_epochs: int, document: bool = True, show_plt: bool = True):
         """
         Training function used to build the relationship matrix in the neural network object
@@ -124,12 +127,12 @@ class NeuralNetwork(object):
         """
         Used to save the current calculated weights
         """
-        np.savetxt("/Users/Owner/PycharmProjects/Project_NN_From_Scratch/train_snapshots/w1.txt", self.w_1, fmt='%s')
-        np.savetxt("/Users/Owner/PycharmProjects/Project_NN_From_Scratch/train_snapshots/w2.txt", self.w_2, fmt='%s')
+        np.savetxt("/Users/Owner/PycharmProjects/Project_NN_From_Scratch/assets/train_snapshots/w1.txt", self.w_1, fmt='%s')
+        np.savetxt("/Users/Owner/PycharmProjects/Project_NN_From_Scratch/assets/train_snapshots/w2.txt", self.w_2, fmt='%s')
 
     def predict(self, pred_val: any = None):
         """
-        Prediction function used to predict a value retrieved from the input data split (if provided by user)
+        Prediction function used to predict a value retrieved from the input assets split (if provided by user)
 
         * If user defined input array is larger than output array, the default prediction value is the first separated input value from the split
         * If user wants to test a unique input value, set pred_val to that value
@@ -137,12 +140,12 @@ class NeuralNetwork(object):
         :param pred_val: input prediction value. Set to desired value using the proper format, or leave to None if contained in input array
         """
         if pred_val is None and self.data.X_pred_val:
-            print("> Predicting data based on training... ")
+            print("> Predicting assets based on training... ")
             print("> Input (scaled): \n" + str(self.data.X_prediction))
             print("> Output: \n" + str(self.forward(prediction_val=self.data.X_prediction)))
         else:
             # FIXME: user inputted prediction value should be scaled by the right max values from dataset
             pred_val = pred_val / np.max(self.X_all, axis=0)
-            print("> Predicting data based on training... ")
+            print("> Predicting assets based on training... ")
             print("> Input (scaled): \n" + str(self.data.X_prediction))
             print("> Output: \n" + str(self.forward(prediction_val=pred_val)))

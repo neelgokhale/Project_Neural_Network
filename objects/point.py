@@ -12,11 +12,11 @@ class Point:
 
     def __init__(self, x, y, test_point=False):
         """
-        2-dimensional data point object. Can be assigned to a cluster, identified as a centroid or as a test point
+        2-dimensional assets point object. Can be assigned to a cluster, identified as a centroid or as a test point
 
         :param x: x-dimension
         :param y: y-dimension
-        :param test_point: True if instance of Point is part of testing data
+        :param test_point: True if instance of Point is part of testing assets
         """
         self.x = x
         self.y = y

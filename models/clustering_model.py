@@ -9,8 +9,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import csv
-from data_class.point import Point
+from objects.point import Point
 from tqdm import tqdm
+from utils import logging
 
 
 def graph_data(point_list: list, x_lbl: str="x", y_lbl: str="y", plt_title: str=None):
@@ -49,7 +50,7 @@ def graph_data(point_list: list, x_lbl: str="x", y_lbl: str="y", plt_title: str=
 
 def generate_rand_data(num_points: int, range_x: float=1, range_y: float=1):
     """
-    Generate random `Point` object data with x and y range
+    Generate random `Point` object assets with x and y range
 
     :param num_points: number of points in dataset
     :param range_x: range of x values
@@ -65,7 +66,7 @@ def generate_rand_data(num_points: int, range_x: float=1, range_y: float=1):
 
 def generate_data(file_path: str, headers: bool=True):
     """
-    Generate `Point` object data imported from values from 2D csv file
+    Generate `Point` object assets imported from values from 2D csv file
 
     :param file_path: path of csv file
     :param headers: set to True if csv file has headers
@@ -211,6 +212,8 @@ def relocate_centroids(centroid_list: list, cm_list: list):
         centroid.move_self((cm_list[i][0], cm_list[i][1]))
 
 
+@logging.my_logger
+@logging.my_timer
 def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict: dict, graph: bool=True, document: bool=False):
     """
     Regenerate clusters after centroid location refinement for given number of epochs
@@ -236,7 +239,7 @@ def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict:
 
 def predict_cluster(test_point, centroid_list: list, point_list: list, graph: bool=True):
     """
-    Used to predict the local cluster of a new test data point
+    Used to predict the local cluster of a new test assets point
 
     :param test_point: Point object with test_point = True
     :param centroid_list: list of centroids

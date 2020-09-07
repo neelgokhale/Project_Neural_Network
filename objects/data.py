@@ -1,6 +1,6 @@
 """
 Created by Neel Gokhale at 2020-07-21
-File data.py from project Project_NN_From_Scratch
+File assets.py from project Project_NN_From_Scratch
 Built using PyCharm
 
 """

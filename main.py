@@ -9,7 +9,7 @@ Built using PyCharm
 
 from models.neuralnetwork_model import NeuralNetwork
 from models import clustering_model as cl
-from data_class import point
+from objects import point
 
 if __name__ == '__main__':
 
