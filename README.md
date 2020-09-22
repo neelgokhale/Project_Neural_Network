@@ -9,3 +9,4 @@ Built this to get a better grasp of the internal functions of a neural network. 
 3. Back-propagation, feed-forward, training and prediction functions
 4. Sigmoid activation function
 5. Clustering model, K-means generation
+6. Logging of code executions

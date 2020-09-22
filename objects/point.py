@@ -8,7 +8,7 @@ Built using PyCharm
 import numpy as np
 
 
-class Point:
+class Point(object):
 
     def __init__(self, x, y, test_point=False):
         """

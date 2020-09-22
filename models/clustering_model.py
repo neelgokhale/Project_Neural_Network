@@ -223,6 +223,7 @@ def regenerate(epochs: int, point_list: list, centroid_list: list, cluster_dict:
     :param centroid_list: list of assigned centroids
     :param cluster_dict: dictionary of clusters
     :param graph: controls if point_list should be graphed after final epoch
+    :param document: controls if each epoch counts should be displayed in terminal
     :return: point_list with refined clusters and centroid values
     """
     for epoch in tqdm(range(epochs), ncols=100, desc="Progress"):

@@ -34,7 +34,8 @@ class NeuralNetwork(object):
         self.w_1 = np.random.randn(self.input_size, self.hidden_size)  # input -> weight layers
         self.w_2 = np.random.randn(self.hidden_size, self.output_size)  # weight layers -> output
 
-    def sigmoid(self, x: np.ndarray):
+    @staticmethod
+    def sigmoid(x: np.ndarray):
         """
         Sigmoid activation function. Scales all inputs between 1 and 0.
 
@@ -43,7 +44,8 @@ class NeuralNetwork(object):
         """
         return 1 / (1 + np.exp(-x))
 
-    def d_sigmoid(self, x: np.ndarray):
+    @staticmethod
+    def d_sigmoid(x: np.ndarray):
         """
         Derivative of sigmoid activation function. Used to calculate gradient descent
 
@@ -53,7 +55,8 @@ class NeuralNetwork(object):
         return x * (1 - x)
 
     # TODO: fully implement softmax function with variable output size
-    def softmax(self, x: np.ndarray):
+    @staticmethod
+    def softmax(x: np.ndarray):
         return np.exp(x) / np.sum(np.exp(x))
 
     def forward(self, prediction_val: any = None):
